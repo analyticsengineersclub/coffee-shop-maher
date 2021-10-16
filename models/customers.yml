@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: customers
+    description: '{{ doc("trying_doc_block") }}'
+    columns:
+      - name: email
+        description: Email of the customers
+        tests:
+          - not_null
