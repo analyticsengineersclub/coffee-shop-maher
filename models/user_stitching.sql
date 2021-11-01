@@ -40,11 +40,13 @@ left join
     on order_price.product_id = products.id
 )
 
+
 select 
-date_trunc(created_at, week) as order_created_at,
-category,
-sum(total_order_price ) as total_weekly_revenue
+    customer_id,
+    date_trunc(created_at, week) as order_created_at,
+    category,
+    sum(total_order_price ) as total_weekly_revenue
 
 from full_order_price 
 
-group by 2,1
+group by 3,2,1

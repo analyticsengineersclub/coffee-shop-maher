@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: user_stitching
+    description: Weekly customers revenue
+    columns:
+      - name: customer_id
+        description: Primary key of the model
+        tests:
+          - unique
+          - not_null
