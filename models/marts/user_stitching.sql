@@ -1,3 +1,8 @@
+{{ config(
+    materialized='table'
+)
+}}
+
 with order_price as 
 
 (
@@ -9,9 +14,9 @@ select
     orders.total,
     order_items.product_id
 
-from `analytics-engineers-club.coffee_shop.orders` orders 
+from {{ source('coffee_shop','orders') }} orders 
     left join 
-    `analytics-engineers-club.coffee_shop.order_items` order_items
+    {{ source('coffee_shop','order_items') }} order_items
     on orders.id = order_items.order_id
 
 ),
@@ -31,20 +36,22 @@ select
 
 from order_price 
 left join 
-    `analytics-engineers-club.coffee_shop.product_prices` as product_prices
+    {{ source('coffee_shop','product_prices') }} as product_prices
     on order_price.product_id = product_prices.product_id 
     and order_price.created_at between product_prices.created_at and product_prices.ended_at
 
 left join 
-    `analytics-engineers-club.coffee_shop.products` as products
+    {{ source('coffee_shop','products') }} as products
     on order_price.product_id = products.id
 )
 
+
 select 
-date_trunc(created_at, week) as order_created_at,
-category,
-sum(total_order_price ) as total_weekly_revenue
+    customer_id,
+    date_trunc(created_at, week) as order_created_at,
+    category,
+    sum(total_order_price ) as total_weekly_revenue
 
 from full_order_price 
 
-group by 2,1
+group by 3,2,1
